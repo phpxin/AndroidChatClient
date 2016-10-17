@@ -1,6 +1,7 @@
 package com.lx.chat.mychatclient;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -29,12 +31,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ChatNewActivity extends AppCompatActivity {
+public class ChatNewActivity extends Activity {
 
     private Bundle _b;
     ListView lv;
     EditText content;
     Button submit;
+    ImageView retbtn ;
     ArrayList<HashMap<String, String>> msgs;
     MsgListAdapter pa;
 
@@ -79,7 +82,14 @@ public class ChatNewActivity extends AppCompatActivity {
 
         content = (EditText) findViewById(R.id.editmsg_content);
         submit = (Button) findViewById(R.id.editmsg_btn);
+        retbtn = (ImageView) findViewById(R.id.retbtn) ;
 
+        retbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ChatNewActivity.this.finish();
+            }
+        });
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override

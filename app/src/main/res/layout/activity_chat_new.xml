@@ -3,7 +3,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     tools:context="com.lx.chat.mychatclient.ChatNewActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/navbar"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/holo_blue_bright"
+
+        >
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="4dp"
+            android:src="@drawable/left"
+            android:scaleType="centerInside"
+            android:id="@+id/retbtn"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="正在与xx聊天"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:textColor="@android:color/white"
+            android:textSize="20dp"
+            />
+    </RelativeLayout>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -30,6 +60,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@null"
+        android:layout_marginTop="40dp"
         android:dividerHeight="0dip"
         android:layout_above="@id/editmsg"
         android:id="@+id/list">

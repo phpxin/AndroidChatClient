@@ -1,31 +1,23 @@
-package com.lx.chat.mychatclient;
+package com.lx.chat.fragments;
 
 import android.annotation.SuppressLint;
+import android.os.Bundle;
+import android.app.Fragment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Adapter;
-import android.widget.ListAdapter;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -34,7 +26,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class UsersActivity extends AppCompatActivity {
+import com.lx.chat.mychatclient.Config;
+import com.lx.chat.mychatclient.DBA;
+import com.lx.chat.mychatclient.HandleMess;
+import com.lx.chat.mychatclient.MsgBean;
+import com.lx.chat.mychatclient.R ;
+import com.lx.chat.mychatclient.UserBean;
+import com.lx.chat.mychatclient.UserListAdapter;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+/**
+ * Created by lx on 16/10/17.
+ */
+public class UsersFragment extends Fragment{
+
 
     private String userListApi = "http://" + Config.ServerAddr + ":8080/index.php?module=user&action=getList" ;
     private Bundle _b;
@@ -44,23 +53,33 @@ public class UsersActivity extends AppCompatActivity {
 
     private SwipeRefreshLayout listRefresh;
 
+    private View thisView;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_users);
+        Toast.makeText(getActivity(), "onCreate", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view;
+        view = inflater.inflate(R.layout.activity_users, container, false);
+        thisView = view ;
+
 
         userlist = new ArrayList<UserBean>();
 
-        ulAdapter = new UserListAdapter(getApplicationContext(), userlist, R.layout.userlist) ;
+        ulAdapter = new UserListAdapter(view.getContext(), userlist, R.layout.userlist) ;
 
 
 
-        lv = (ListView)findViewById(R.id.lv) ;
+        lv = (ListView)view.findViewById(R.id.lv) ;
 
         lv.setAdapter(ulAdapter);
 
 
-        listRefresh = (SwipeRefreshLayout)findViewById(R.id.userListRf);
+        listRefresh = (SwipeRefreshLayout)view.findViewById(R.id.userListRf);
 
         listRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -74,39 +93,17 @@ public class UsersActivity extends AppCompatActivity {
 
         Config.rdThread.setDoit(true);
         Config.rdThread.setHandler(this.myHandler);
+
+
+        return view;
     }
+
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
-        //当用户返回该界面时触发
-
-        Config.rdThread.setDoit(true);
-        Config.rdThread.setHandler(this.myHandler);
+    public void onDestroy() {
+        super.onDestroy();
+        Toast.makeText(getActivity(), "onDestroy", Toast.LENGTH_SHORT).show();
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_users, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
 
     Runnable sockHttpConnection = new Runnable() {
 
@@ -166,7 +163,7 @@ public class UsersActivity extends AppCompatActivity {
                 Bundle _bb = new Bundle();
                 _bb.putString("content", content);
                 mess.setData(_bb);
-                UsersActivity.this.myHandler.sendMessage(mess);
+                UsersFragment.this.myHandler.sendMessage(mess);
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -215,7 +212,7 @@ public class UsersActivity extends AppCompatActivity {
                         int code = jsonRoot.getInt("code") ;
 
                         if (code!=0){
-                            Toast.makeText(getApplicationContext(), "request error code = "+code, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(thisView.getContext(), "request error code = "+code, Toast.LENGTH_SHORT).show();
                         }else {
 
                             JSONObject data = (JSONObject) jsonRoot.getJSONObject("data");
@@ -262,11 +259,11 @@ public class UsersActivity extends AppCompatActivity {
 
                     Log.i("lixin", "save db") ;
 
-                    DBA dba = new DBA(getApplicationContext()) ;
+                    DBA dba = new DBA(thisView.getContext()) ;
                     MsgBean _msg = new MsgBean();
                     _msg.uid = Integer.parseInt(sender);
                     _msg.content = _b.getString("content");
-                    _msg.fid = Config.my.uid ;
+                    _msg.fid = Config.my.getUid() ;
                     _msg.addtime = 0 ;
                     _msg.type = 1 ;
 
