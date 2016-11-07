@@ -60,7 +60,25 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/loginbtn"
-            android:text="login"/>
+            android:text="登录"/>
     </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="忘记密码"
+        android:id="@+id/forget_pwd"
+        android:gravity="center_horizontal"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="10dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="注册"
+        android:id="@+id/register"
+        android:gravity="center_horizontal"
+        android:layout_above="@id/forget_pwd"
+        android:paddingBottom="10dp"/>
 
 </RelativeLayout>

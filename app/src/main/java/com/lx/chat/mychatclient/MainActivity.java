@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -38,6 +39,8 @@ public class MainActivity extends Activity {
     public EditText username;
     public EditText password;
     public Button loginbtn;
+
+    public TextView registerBtn;
 
     public String remoteIp = "";
     public int remotePort = 10001;
@@ -62,6 +65,8 @@ public class MainActivity extends Activity {
         username = (EditText)findViewById(R.id.username);
         password = (EditText)findViewById(R.id.password);
 
+        registerBtn = (TextView) findViewById(R.id.register) ;
+
         loginbtn = (Button)findViewById(R.id.loginbtn);
 
         loginbtn.setOnClickListener(new View.OnClickListener() {
@@ -70,6 +75,17 @@ public class MainActivity extends Activity {
                 //(new Thread(sockThread)).start();
                 Config.ServerAddr = ipaddr.getText().toString() ;
                 (new Thread(sockHttpConnection)).start();
+            }
+        });
+
+        registerBtn.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View view) {
+                //跳转登录页
+                //使用意图对象切换窗口
+                Intent _intent=new Intent();
+                _intent.setClass(getApplicationContext(), RegisterActivity.class);
+                //切换窗体
+                startActivity(_intent);
             }
         });
 	}
