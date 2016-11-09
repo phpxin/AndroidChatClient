@@ -13,9 +13,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.lx.chat.adapters.MsgListAdapter;
+import com.lx.chat.bean.GetInfoResponse;
+import com.lx.chat.bean.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,6 +28,7 @@ import org.json.JSONTokener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -38,6 +43,7 @@ public class ChatNewActivity extends Activity {
     EditText content;
     Button submit;
     ImageView retbtn ;
+    TextView titleTv ;
     ArrayList<HashMap<String, String>> msgs;
     MsgListAdapter pa;
 
@@ -52,14 +58,14 @@ public class ChatNewActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_new);
 
-        setTitle("聊天");
+        //setTitle("聊天");
 
         //datas
         Bundle bun=this.getIntent().getExtras(); //通过进来的意图对象获取数据
 
         try{
             fid = Integer.parseInt(bun.getString("fid"));
-            userInfoApi = userInfoApi + "&uid=" + fid;
+            //userInfoApi = userInfoApi + "&uid=" + fid;
         }catch(NumberFormatException _e){
             Toast.makeText(getApplicationContext(), "fid is error", Toast.LENGTH_SHORT).show();
 
@@ -68,6 +74,8 @@ public class ChatNewActivity extends Activity {
             startActivity(showDemoPage);
         }
 
+        titleTv = (TextView) findViewById(R.id.titleText) ;
+        titleTv.setText("获取信息中...");
 
         msgs = new ArrayList<HashMap<String, String>>() ;
 
@@ -169,29 +177,55 @@ public class ChatNewActivity extends Activity {
 
             // 通过http将用户信息提交
             HttpURLConnection hUrlConn;
+            OutputStream ots = null;
             try {
                 // 通过url对象获取并初始化http连接对象
                 hUrlConn = (HttpURLConnection) url.openConnection();
 
                 // 设置开启post方法
-                hUrlConn.setRequestMethod("GET");
+                hUrlConn.setRequestMethod("POST");
 
                 // 打开http连接
                 hUrlConn.connect();
+
+                ots=hUrlConn.getOutputStream();
+                String queryString = "authcode="+Config.my.getAuthcode()+"&uid="+fid;
+                ots.write(queryString.getBytes());
 
                 // 接收返回值
                 BufferedReader ins = new BufferedReader(new InputStreamReader(
                         hUrlConn.getInputStream()));
 
-                String content = null;
+                String content = "";
                 String line = "";
 
                 while ((line = ins.readLine()) != null) {
                     content += line;
                 }
                 // 使用自定义函数，去除BOM头
-                content=ChatUtil.JSONTokener(content);
+                //content=ChatUtil.JSONTokener(content);
                 Log.i("lixin",content);
+
+                GetInfoResponse getInfoResponse = JSON.parseObject(content, GetInfoResponse.class) ;
+
+                if (getInfoResponse == null){
+                    Log.i("lixin", "get user Info failed: parse json failed");
+                }else{
+                    if (getInfoResponse.getCode() == 0) {
+
+                        User user = getInfoResponse.getData().getInfo() ;
+                        fname = user.getName() ;
+                        favatar = user.getAvatar() ;
+                        //titleTv.setText("正在与"+fname+"聊天");
+                        selectFriendCacheMsg(); //必须在url获取完成后调用
+
+
+                    }else{
+                        Toast.makeText(getApplicationContext(), getInfoResponse.getMsg(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                /*
 
                 // 解析json
                 JSONTokener jsonParser = new JSONTokener(content);
@@ -203,11 +237,22 @@ public class ChatNewActivity extends Activity {
                     JSONObject data = (JSONObject) jarr.getJSONObject("data").getJSONObject("info");
                     fname = data.getString("name");
                     favatar = data.getString("avatar");
+                    titleTv.setText("正在与"+fname+"聊天");
                     selectFriendCacheMsg(); //必须在url获取完成后调用
                 }else{
                     //failed
                     Log.i("lixin", "get user Info failed: parse json failed");
                 }
+
+                */
+
+                //msg
+                Message mess=new Message();
+                mess.what = HandleMess.MESS_HTTP_GET_INFO_OK;
+                //Bundle _bb = new Bundle();
+                //_bb.putString("content", content);
+                //mess.setData(_bb);
+                ChatNewActivity.this.myHandler.sendMessage(mess);
 
             } catch (MalformedURLException e) {
                 //e.printStackTrace();
@@ -219,7 +264,7 @@ public class ChatNewActivity extends Activity {
             } catch (IOException e) {
                 Log.i("lixin", e.getMessage());
 
-            } catch (JSONException e) {
+            } catch (NullPointerException e) {
                 Log.i("lixin", e.getMessage());
             }
 
@@ -235,6 +280,10 @@ public class ChatNewActivity extends Activity {
             _b = msg.getData(); // bundle这东西就是个包，数据打包用它传递过来
 
             switch (msg.what) {
+
+                case HandleMess.MESS_HTTP_GET_INFO_OK:
+                    titleTv.setText("正在与"+fname+"聊天");
+                    break;
 
                 case HandleMess.MESS_RECVMSG :
                     String sender = _b.getString("uid");

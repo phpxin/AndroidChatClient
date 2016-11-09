@@ -5,6 +5,7 @@ public class UserBean {
 	String account;
 	String nickname;
 	String avatar;
+	String authcode;
 	
 	public String getAvatar() {
 		return avatar;
@@ -30,4 +31,8 @@ public class UserBean {
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
 	}
+    public String getAuthcode(){return this.authcode; }
+    public void setAuthcode(String authcode){this.authcode=authcode;}
+
+
 }

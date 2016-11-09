@@ -13,4 +13,6 @@ public class HandleMess {
 
 	//http 用的
 	public final static int MESS_HTTP_LOGINOK = 10001; // 登录成功
+	public final static int MESS_HTTP_GET_INFO_OK = 10002; // 获取用户信息成功
+	public final static int MESS_HTTP_REGISTER_DONE = 10003; // 完成注册请求
 }

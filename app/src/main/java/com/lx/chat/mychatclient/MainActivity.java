@@ -29,6 +29,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.lx.chat.bean.LoginResponse;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -284,27 +287,37 @@ public class MainActivity extends Activity {
                 SysLog.log("content is "+content);
 
                 try{
-                    JSONTokener jsonParser = new JSONTokener(content);
+                    //JSONTokener jsonParser = new JSONTokener(content);
 
-                    JSONObject jsonRoot = (JSONObject) jsonParser.nextValue();
+                    //JSONObject jsonRoot = (JSONObject) jsonParser.nextValue();
 
-                    int code = jsonRoot.getInt("code") ;
+                    //int code = jsonRoot.getInt("code") ;
 
-                    if (code!=0){
-                        Toast.makeText(getApplicationContext(), "request error code = "+code, Toast.LENGTH_SHORT).show();
-                    }else {
-                        JSONObject data = (JSONObject) jsonRoot.getJSONObject("data");
-                        authcode = data.getString("authcode");
+                    LoginResponse loginResponse  = JSON.parseObject(content, LoginResponse.class) ;
 
-                        //请求聊天socket服务器
-                        (new Thread(sockThread)).start();
+                    if (loginResponse==null){
+                        Toast.makeText(getApplicationContext(), "request error data bad", Toast.LENGTH_SHORT).show();
+                    }else{
+                        int code = loginResponse.getCode() ;
+                        if (code!=0){
+                            Toast.makeText(getApplicationContext(), loginResponse.getMsg(), Toast.LENGTH_SHORT).show();
+                        }else {
+                            //JSONObject data = (JSONObject) jsonRoot.getJSONObject("data");
+                            //authcode = data.getString("authcode");
+                            authcode = loginResponse.getData().getAuthcode() ;
+                            Config.my.setAuthcode(authcode);
+
+                            //请求聊天socket服务器
+                            (new Thread(sockThread)).start();
+                        }
                     }
-                }catch (JSONException je){
+
+
+                }catch (NullPointerException je){
                     SysLog.log("http login err content is "+content);
                     Toast.makeText(getApplicationContext(), "请求失败,请稍后重试", Toast.LENGTH_SHORT).show();
                 }
                 break;
-
 
 
 			}

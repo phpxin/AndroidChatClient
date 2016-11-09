@@ -12,7 +12,7 @@ public class Config {
 	public static UserBean my = null;
 	public static Socket client = null;
 	public static BufferedOutputStream clientSend = null;
-	public static String ServerAddr = "";
+	public static String ServerAddr = "192.168.2.105";
 	public static ReadData rdThread = null;
 
 	

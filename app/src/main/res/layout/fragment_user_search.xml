@@ -14,7 +14,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="联系人"
+            android:text="搜索"
             android:gravity="center"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
@@ -24,11 +24,33 @@
     </RelativeLayout>
 
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/navbar"
+        android:id="@+id/search_box"
+        >
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="搜索"
+            android:layout_alignParentRight="true"
+            android:id="@+id/do_search"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/do_search"
+            android:id="@+id/keywords"/>
+
+    </RelativeLayout>
+
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/navbar"
+        android:layout_below="@id/search_box"
         android:id="@+id/userListRf">
         <ListView
             android:layout_width="fill_parent"

@@ -26,6 +26,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.alibaba.fastjson.JSON;
+import com.lx.chat.bean.User;
+import com.lx.chat.bean.UserListResponse;
 import com.lx.chat.mychatclient.Config;
 import com.lx.chat.mychatclient.DBA;
 import com.lx.chat.mychatclient.HandleMess;
@@ -113,6 +116,7 @@ public class UsersFragment extends Fragment{
             URL url = null;
 
             int uid = Config.my.getUid() ;
+            String authcode = Config.my.getAuthcode();
 
             try {
                 // 创建url对象
@@ -142,7 +146,7 @@ public class UsersFragment extends Fragment{
                 //req.write("uid="+uid);
                 //发送post请求，post以键值对夹&符保存在正文中发送
                 ots=hUrlConn.getOutputStream();
-                String queryString = "uid="+uid;
+                String queryString = "authcode="+authcode;
                 ots.write(queryString.getBytes());
 
 
@@ -205,6 +209,52 @@ public class UsersFragment extends Fragment{
                     try{
                         // 解析json
                         String content = _b.getString("content");
+
+                        UserListResponse userListResp = JSON.parseObject(content, UserListResponse.class) ;
+
+                        if (userListResp==null){
+                            Toast.makeText(thisView.getContext(), "data bad", Toast.LENGTH_SHORT).show();
+                        }else{
+
+                            if (userListResp.getCode() != 0){
+                                Toast.makeText(thisView.getContext(), userListResp.getMsg(), Toast.LENGTH_SHORT).show();
+                            }else {
+
+                                ArrayList<User> users = userListResp.getData().getUserlist() ;
+
+                                //JSONObject data = (JSONObject) jsonRoot.getJSONObject("data");
+
+                                //JSONArray jarr = (JSONArray) data.getJSONArray("userlist");
+
+                                //Object userItem;
+                                for (User user : users) {
+                                /*
+                                JSONObject _li = jarr.getJSONObject(i);
+                                int uid = _li.getInt("id");
+                                String account = _li.getString("name");
+                                String avatar = _li.getString("avatar");
+                                */
+
+                                    UserBean _b = new UserBean();
+
+
+                                    _b.setUid(user.getId());
+                                    _b.setAccount(user.getName());
+                                    _b.setAvatar(user.getAvatar());
+                                    _b.setNickname(user.getName());
+
+                                    userlist.add(_b);
+
+                                }
+
+                                ulAdapter.notifyDataSetChanged();
+
+
+                            }
+                        }
+
+                        /*
+
                         JSONTokener jsonParser = new JSONTokener(content);
 
                         JSONObject jsonRoot = (JSONObject) jsonParser.nextValue();
@@ -243,7 +293,9 @@ public class UsersFragment extends Fragment{
 
                         }
 
-                    }catch (JSONException e){
+                        */
+
+                    }catch (NullPointerException e){
 
                         Log.i("lixin", e.getMessage()) ;
                     }finally {

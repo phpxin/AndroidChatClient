@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.lx.chat.fragments.UserSearchFragment;
 import com.lx.chat.fragments.UsersFragment;
 import com.lx.chat.mychatclient.R;
 
@@ -93,9 +94,9 @@ public class MenuAdapter extends BaseAdapter {
                     case 0:
                         bf = new UsersFragment();
                         break;
-//                    case 1:
-//                        bf = new LoginContent();
-//                        break;
+                    case 1:
+                        bf = new UserSearchFragment();
+                        break;
 //                    case 2:
 //                        bf = new UserInfo();
 //                        break;

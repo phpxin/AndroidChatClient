@@ -3,24 +3,21 @@ package com.lx.chat.bean;
 import java.util.ArrayList;
 
 /**
- * Created by lx on 16/11/8.
+ * Created by lx on 16/11/9.
  */
-public class UserListResponse extends CommonResponse {
+public class UserSearchResponse extends CommonResponse {
+    UserSearchResponseData data ;
 
-
-    private UserListResponseData data ;
-
-
-    public UserListResponseData getData() {
+    public UserSearchResponseData getData() {
         return data;
     }
-    public void setData(UserListResponseData data) {
+
+    public void setData(UserSearchResponseData data) {
         this.data = data;
     }
 
-
-    public class UserListResponseData{
-        private ArrayList<User> userlist ;
+    public class UserSearchResponseData{
+        ArrayList<User> userlist ;
 
         public ArrayList<User> getUserlist() {
             return userlist;
@@ -29,8 +26,5 @@ public class UserListResponse extends CommonResponse {
         public void setUserlist(ArrayList<User> userlist) {
             this.userlist = userlist;
         }
-
-
     }
-
 }
