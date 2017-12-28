@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    tools:context="com.lx.chat.mychatclient.InviteActivity">
+
+    <include
+        layout="@layout/topbar"
+        android:id="@+id/topbar"
+        />
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/invite"
+        android:layout_below="@id/topbar"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/avatar"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:layout_below="@id/avatar"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:id="@+id/intro"
+        android:inputType="textMultiLine"
+        android:text="111"
+        android:gravity="top" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/doInvite"
+        android:layout_below="@id/intro"
+        android:text="邀请"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>

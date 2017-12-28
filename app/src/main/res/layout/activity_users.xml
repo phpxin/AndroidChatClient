@@ -21,6 +21,15 @@
             android:textColor="@android:color/white"
             android:textSize="20dp"
             />
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="centerInside"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/invited"
+            android:layout_marginRight="10dp"
+            android:id="@+id/invitedBtn"
+            />
     </RelativeLayout>
 
 

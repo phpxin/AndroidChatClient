@@ -1,6 +1,7 @@
 package com.lx.chat.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Handler;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -29,18 +31,17 @@ import java.util.List;
 import com.alibaba.fastjson.JSON;
 import com.lx.chat.bean.User;
 import com.lx.chat.bean.UserListResponse;
+import com.lx.chat.mychatclient.ChatNewActivity;
 import com.lx.chat.mychatclient.Config;
 import com.lx.chat.mychatclient.DBA;
 import com.lx.chat.mychatclient.HandleMess;
+import com.lx.chat.mychatclient.InviteListActivity;
 import com.lx.chat.mychatclient.MsgBean;
 import com.lx.chat.mychatclient.R ;
 import com.lx.chat.mychatclient.UserBean;
 import com.lx.chat.mychatclient.UserListAdapter;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
+
 
 /**
  * Created by lx on 16/10/17.
@@ -57,6 +58,8 @@ public class UsersFragment extends Fragment{
     private SwipeRefreshLayout listRefresh;
 
     private View thisView;
+
+    private ImageView invitedBtn ;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,6 +94,19 @@ public class UsersFragment extends Fragment{
             }
         });
 
+        invitedBtn = (ImageView) view.findViewById(R.id.invitedBtn) ;
+        invitedBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent showInvitedPage=new Intent(); //使用意图对象切换窗口
+                showInvitedPage.setClass(view.getContext(), InviteListActivity.class); //参数1是一个context对象，参数2是窗体类
+                showInvitedPage.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                //Bundle mainBundle=new Bundle(); //设置bundle对象，传递数据
+                //mainBundle.putString("fid", fid+"");
+                //showDemoPage.putExtras(mainBundle);
+                view.getContext().startActivity(showInvitedPage); //切换窗体
+            }
+        });
 
         (new Thread(sockHttpConnection)).start();
 

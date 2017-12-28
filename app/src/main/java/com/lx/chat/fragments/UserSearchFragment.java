@@ -123,7 +123,7 @@ public class UserSearchFragment extends Fragment {
 
         userlist = new ArrayList<UserBean>();
 
-        ulAdapter = new SearchListAdapter(view.getContext(), userlist, R.layout.userlist) ;
+        ulAdapter = new SearchListAdapter(view.getContext(), userlist, R.layout.item_search) ;
 
 
 

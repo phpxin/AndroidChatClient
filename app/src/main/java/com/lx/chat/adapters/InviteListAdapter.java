@@ -1,17 +1,16 @@
 package com.lx.chat.adapters;
 
 import android.content.Context;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.lx.chat.bean.InviteItem;
+import com.lx.chat.bean.InviteListResponse;
 import com.lx.chat.listeners.BtnClickListener;
-import com.lx.chat.listeners.UserListClickListener;
 import com.lx.chat.mychatclient.AsyncTaskImageLoad;
 import com.lx.chat.mychatclient.R;
 import com.lx.chat.mychatclient.UserBean;
@@ -23,9 +22,9 @@ import java.util.List;
  * Created by QiCheng on 2016/3/23.
  * @author lixin65535@126.com
  */
-public class SearchListAdapter extends BaseAdapter {
+public class InviteListAdapter extends BaseAdapter {
 
-    private List<UserBean> userlist;
+    private List<InviteItem> userlist;
     private int res;
     private LayoutInflater inflater ;//布局填充器
     private String uri ;
@@ -33,7 +32,7 @@ public class SearchListAdapter extends BaseAdapter {
 
 
 
-    public SearchListAdapter(Context _context, List<UserBean> _userlist, int _res)
+    public InviteListAdapter(Context _context, List<InviteItem> _userlist, int _res)
     {
         this.userlist = _userlist ;
         this.res = _res ;
@@ -71,9 +70,9 @@ public class SearchListAdapter extends BaseAdapter {
         TextView userNameView = (TextView) convertView.findViewById(R.id.uname) ;
         TextView userIntroView = (TextView) convertView.findViewById(R.id.intro) ;
 
-        UserBean user = this.userlist.get(i) ;
+        InviteItem user = this.userlist.get(i) ;
 
-        userNameView.setText(user.getNickname());
+        userNameView.setText(user.getName());
         userIntroView.setText("这是用户签名");
 
 
@@ -82,9 +81,10 @@ public class SearchListAdapter extends BaseAdapter {
         LoadImage(userHeaderView, uri);
 
         //convertView.setOnClickListener(new UserListClickListener(context, user.getUid()));
-        ImageView inviteBtn = (ImageView) convertView.findViewById(R.id.inviteBtn) ;
+        ImageView inviteBtn = (ImageView) convertView.findViewById(R.id.dealInviteBtn) ;
         BtnClickListener bcl = new BtnClickListener(context) ;
-        bcl.setFid(user.getUid());
+        //bcl.setFid(user.getUid());
+        bcl.setInviteId(user.getId());
         inviteBtn.setOnClickListener( bcl );
 
 
